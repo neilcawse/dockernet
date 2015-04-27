@@ -17,7 +17,7 @@ ENV WINEARCH win32
 RUN wine wineboot && xvfb-run winetricks --unattended dotnet40 corefonts
 
 # Install GOLANG
-sudo apt-get install golang
+RUN apt-get install golang
 
 #Install Drive (Google Drive)
 RUN go get -u github.com/odeke-em/drive/cmd/drive
