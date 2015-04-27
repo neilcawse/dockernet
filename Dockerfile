@@ -8,6 +8,9 @@ RUN apt-get install wget
 # Install GOLANG
 RUN apt-get -y install golang
 
+ENV GOPATH /usr/lib/go/
+ENV PATH $GOPATH/bin:$PATH
+
 # Install Drive (Google Drive)
 RUN go get -u github.com/odeke-em/drive/cmd/drive
 
