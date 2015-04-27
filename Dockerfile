@@ -3,10 +3,10 @@ MAINTAINER Neil Cawse <neilcawse@hotmail.com>
 
 # Wget is needed by winetricks
 RUN apt-get update
-RUN apt-get install wget
+RUN apt-get -y install wget
 
 #Git need by Go
-RUN apt-get install git-core
+RUN apt-get -y install git-core
 
 # Install GOLANG
 RUN apt-get -y install golang
