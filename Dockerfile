@@ -5,6 +5,9 @@ MAINTAINER Neil Cawse <neilcawse@hotmail.com>
 RUN apt-get update
 RUN apt-get install wget
 
+#Git need by Go
+RUN apt-get install git-core
+
 # Install GOLANG
 RUN apt-get -y install golang
 
