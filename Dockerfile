@@ -19,11 +19,6 @@ ENV PATH $GOPATH/bin:$PATH
 # Install Drive (Google Drive)
 RUN go get -u github.com/odeke-em/drive/cmd/drive
 
-WORKDIR /home/wuser/
-ADD novnc /home/wuser/novnc/
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-EXPOSE 8080
-
 # Wine really doesn't like to be run as root, so let's set up a non-root
 # environment
 RUN useradd -d /home/wuser -m -s /bin/bash wuser
@@ -31,9 +26,14 @@ USER wuser
 ENV HOME /home/wuser
 ENV WINEPREFIX /home/wuser/.wine
 ENV WINEARCH win32
+ENV DISPLAY :0
 
 # Install .NET Framework 4.0
 RUN wine wineboot && xvfb-run winetricks --unattended dotnet40 corefonts
 
 USER root
+WORKDIR /root/
+ADD novnc /root/novnc/
+ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+EXPOSE 8080
 CMD ["/usr/bin/supervisord"]
