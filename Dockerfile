@@ -1,16 +1,13 @@
 FROM monokrome/wine
 MAINTAINER Neil Cawse <neilcawse@hotmail.com>
 
-# Wget is needed by winetricks
-RUN apt-get update
-RUN apt-get -y install wget
-
-#Git need by Go
-RUN apt-get -y install git-core
-
-# Install GOLANG
-RUN apt-get -y install golang
-
+# Wget is needed by winetricks. Git,Mercurial need by Go. Install GOLANG
+RUN apt-get update && apt-get -y install \
+  git-core \
+  golang \
+  mercurial \
+  wget
+  
 ENV GOPATH /usr/lib/go/
 ENV PATH $GOPATH/bin:$PATH
 
