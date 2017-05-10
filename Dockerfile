@@ -1,35 +1,21 @@
-FROM monokrome/wine
+FROM ubuntu:rolling
 MAINTAINER Neil Cawse <neilcawse@hotmail.com>
 
-# Wget is needed by winetricks. Git,Mercurial need by Go. Install GOLANG. vnc dependencies
-RUN apt-get update && apt-get -y install \
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg \
+mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg \
+sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list' \
+sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet-release/ xenial main" > /etc/apt/sources.list.d/dotnetdev.list' \
+apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 417A0893 \
+apt-get update && apt-get -y install \
   fluxbox \
-  git-core \
-  golang \
-  mercurial \
+  git \
   supervisor \
-  wget \
   x11vnc \
   xdotool \
-  xvfb
-
-ENV GOPATH /usr/lib/go/
-ENV PATH $GOPATH/bin:$PATH
-
-# Install Drive (Google Drive)
-RUN go get -u github.com/odeke-em/drive/cmd/drive
-
-# Wine really doesn't like to be run as root, so let's set up a non-root
-# environment
-RUN useradd -d /home/wuser -m -s /bin/bash wuser
-USER wuser
-ENV HOME /home/wuser
-ENV WINEPREFIX /home/wuser/.wine
-ENV WINEARCH win32
-ENV DISPLAY :0
-
-# Install .NET Framework 4.0
-RUN wine wineboot && xvfb-run winetricks --unattended dotnet40 corefonts
+  xvfb \
+  chromium-browser \
+  code \
+  dotnet-dev-1.0.4
 
 USER root
 WORKDIR /root/
