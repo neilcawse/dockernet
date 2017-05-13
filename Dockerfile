@@ -1,8 +1,24 @@
 FROM ubuntu:rolling
 MAINTAINER Neil Cawse <neilcawse@hotmail.com>
 # Install prerequisites
-RUN apt-get update && apt-get install -y curl dirmngr \
-  && rm -fr /var/lib/apt/lists/*
+
+RUN apt-get update -y && \
+	apt-get -y install \
+	curl \
+	git \
+	net-tools \
+	python \
+	python-numpy \
+	python-pkg-resources \
+	vim \
+	websockify \
+	wget \
+	xdotool \
+	xfonts-base \
+	x11-utils \
+	x11vnc \
+	xvfb \
+  dirmngr
 
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg \
   && mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg \
@@ -10,20 +26,20 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > mic
   && sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet-release/ yakkety main" > /etc/apt/sources.list.d/dotnetdev.list' \
   && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 417A0893
 
-RUN apt-get update && apt-get -y install \
-  fluxbox \
-  git \
-  supervisor \
-  x11vnc \
-  xdotool \
-  xvfb \
+RUN apt-get update -y && \
+  apt-get -y install \
   chromium-browser \
   code \
   dotnet-dev-1.0.4
+  
+ENV DISPLAY=:0
 
-USER root
-WORKDIR /root/
-ADD novnc /root/novnc/
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-EXPOSE 8080
-CMD ["/usr/bin/supervisord"]
+RUN cd / && git clone git://github.com/kanaka/noVNC 
+
+ADD index.html /noVNC/
+ADD init.sh /init.sh
+RUN chmod +x /init.sh
+
+EXPOSE 80
+
+CMD ["/init.sh"]
