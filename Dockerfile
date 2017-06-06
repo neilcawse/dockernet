@@ -4,6 +4,12 @@ MAINTAINER Neil Cawse <neilcawse@hotmail.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 ADD startup.sh /startup.sh
+
+RUN apt-get update -y && \
+    apt-get install -y curl && \
+    apt-get autoclean && \
+    apt-get autoremove && \
+    rm -rf /var/lib/apt/lists/*
     
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg \
   && mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg \
